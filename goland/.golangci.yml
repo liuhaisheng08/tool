@@ -1,0 +1,173 @@
+#https://golangci-lint.run/usage/configuration/#config-file
+run:
+  concurrency: 4
+  timeout: 5m
+  # readonly|release|vendor
+  modules-download-mode: readonly
+  issues-exit-code: 1
+  tests: true
+  skip-dirs:
+    - bin
+    - vendor
+  skip-dirs-use-default: true
+  allow-parallel-runners: false
+  skip-files:
+  build-tags:
+
+output:
+  # colored-line-number|line-number|json|tab|checkstyle|code-climate, default is "colored-line-number"
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+  uniq-by-line: true
+  path-prefix: ""
+  sort-results: false
+
+
+linters-settings:
+  errcheck:
+    check-type-assertions: false
+    check-blank: true
+    ignore: fmt:.*,io/ioutil:^Read.*
+
+  funlen:
+    lines: 80
+    statements: 120
+
+  govet:
+    check-shadowing: true
+    enable:
+      - atomicalign
+    enable-all: false
+    disable:
+      - shadow
+    disable-all: false
+
+  golint:
+    min-confidence: 0.8
+
+  gocyclo:
+    min-complexity: 35
+
+  gocognit:
+    min-complexity: 35
+
+  maligned:
+    suggest-new: true
+    auto-fix: true
+
+  dupl:
+    threshold: 100
+
+  goconst:
+
+    min-len: 3
+
+    min-occurrences: 3
+
+  depguard:
+    list-type: blacklist
+    include-go-root: false
+
+  lll:
+    line-length: 800
+    tab-width: 1
+
+  misspell:
+    locale: US
+    ignore-words:
+      - someword
+
+  nakedret:
+    max-func-lines: 30
+
+  unused:
+    check-exported: true
+  unparam:
+    check-exported: false
+  gocritic:
+    enabled-checks:
+    disabled-checks:
+    enabled-tags:
+      - performance
+    settings:
+      captLocal:
+        paramsOnly: true
+      rangeValCopy:
+        sizeThreshold: 32
+
+linters:
+  enable:
+    - gofmt
+    - bodyclose
+    - funlen
+    - golint
+    - deadcode
+    - errcheck
+    - goconst
+    - gocognit
+    - godox
+    - gosimple
+    - govet
+    - ineffassign
+    - interfacer
+    - misspell
+    - prealloc
+    - scopelint
+    - staticcheck
+    - dogsled
+    - unconvert
+    - maligned
+#    - depguard
+#    - gochecknoinits
+#    - gocritic
+#    - gosec
+#    - staticcheck
+#    - typecheck
+#    - unparam
+#    - varcheck
+#    - structcheck
+
+  enable-all: false
+  disable:
+    - unused
+    - stylecheck
+    - whitespace
+    - dupl
+    - lll
+    - wsl
+    - nakedret
+    - gochecknoglobals
+  disable-all: false
+  presets:
+    - bugs
+  fast: false
+
+issues:
+  new: false
+  exclude: /bin
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+        - dupl
+        - gosec
+
+    - path: internal/hmac/
+      text: "weak cryptographic primitive"
+      linters:
+        - gosec
+
+
+    - linters:
+        - staticcheck
+      text: "SA9003:"
+
+
+    - linters:
+        - lll
+      source: "^//go:generate "
+
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
